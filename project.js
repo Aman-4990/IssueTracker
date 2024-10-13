@@ -1,9 +1,37 @@
-const express = require('express');
-const router = express.Router();
-const projectController = require('../controllers/project_controller');
+const mongoose = require('mongoose');
 
-router.post('/create', projectController.create);
-router.get('/:id', projectController.project);
-router.post('/:id', projectController.createIssue);
+const projectSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    author: {
+      type: String,
+      required: true,
+    },
+    issues: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Issue',
+      },
+    ],
+    labels: [
+      {
+        type: String,
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = router;
+const Project = mongoose.model('Project', projectSchema);
+
+module.exports = Project;
